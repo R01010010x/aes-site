@@ -1,106 +1,196 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="section-box admin-section">
-    <h2>Administratorbereich</h2>
-    <div class="admin-grid">
-        <!-- Courses -->
-        <div class="admin-box">
-            <h3>Kurse verwalten</h3>
-            <button class="admin-add-btn" onclick="openModal('courseModal')">＋ Kurs hinzufügen</button>
-            <ul class="admin-list">
-                {% for course in courses %}
-                <li>
-                    <strong>{{ course.name }}</strong> ({{ course.date }} {{ course.time }})
-                    <button class="admin-remove-btn" onclick="deleteCourse({{ course.id }})">−</button>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <!-- Gallery -->
-        <div class="admin-box">
-            <h3>Galerie verwalten</h3>
-            <form method="post" enctype="multipart/form-data" action="{{ url_for('admin_gallery_upload') }}">
-                <button class="admin-add-btn" type="button" onclick="document.getElementById('gallery-upload').click()">＋ Bild hinzufügen</button>
-                <input id="gallery-upload" name="photo" type="file" accept="image/*" style="display:none" onchange="this.form.submit()">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { background: #f4f6fa; margin:0; padding:2em; font-family: 'Segoe UI', sans-serif; }
+        .admin-section { background: #fff; border-radius: 16px; box-shadow:0 2px 16px #0001; padding:2em; margin-bottom:2em; }
+        .admin-section h2 { margin-top: 0; }
+        .admin-list { display:flex; flex-wrap: wrap; gap: 1em; }
+        .admin-item, .gallery-thumb, .team-thumb { background: #f6f6ff; border-radius: 12px; padding:1em; margin-bottom:1em; box-shadow: 0 1px 6px #0001; flex: 1 1 200px;}
+        .admin-form { background: #f0f8ff; border-radius: 12px; padding:1.2em; margin-bottom:1em; box-shadow: 0 1px 6px #0001; max-width: 400px;}
+        .admin-form input, .admin-form textarea, .admin-form select { width:100%; margin-bottom:1em; border-radius: 6px; border:1px solid #ccc; padding:0.5em;}
+        .admin-btn { border:none; background:#2d92f4; color:#fff; border-radius:6px; padding:0.5em 1.2em; font-size:1em; cursor:pointer; }
+        .admin-btn.danger { background:#e03a3a; }
+        .admin-btn.add { background:#19ad53; display:inline-block; margin-bottom: 0.5em;}
+        .gallery-grid { display:flex; flex-wrap:wrap; gap:1em;}
+        .gallery-thumb img { width:80px; height:80px; object-fit:cover; border-radius:8px; display:block;}
+        .team-thumb img { width:60px; height:60px; object-fit:cover; border-radius:8px; display:block;}
+        .admin-mini-btn { background:#e03a3a; color:#fff; border:none; border-radius:50%; width:32px; height:32px; font-size:1.2em; cursor:pointer; display: inline-flex; align-items: center; justify-content: center;}
+        hr { margin:2em 0;}
+        .flash { margin:1em 0; padding:1em; border-radius:8px; background:#e0f9d8; color:#185c2b;}
+        .flash.error { background:#ffe3e3; color:#a00;}
+    </style>
+</head>
+<body>
+    <h1 style="margin-bottom:2em;">Admin Dashboard</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="flash {{category}}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Courses -->
+    <div class="admin-section">
+        <h2>Courses <form style="display:inline;" method="post"><button type="button" onclick="document.getElementById('add-course-form').style.display='block'" class="admin-btn add">+</button></form></h2>
+        <div id="add-course-form" class="admin-form" style="display:none;">
+            <form method="post">
+                <input type="hidden" name="action" value="add_course">
+                <input type="text" name="name" placeholder="Course name" required>
+                <textarea name="description" placeholder="Description"></textarea>
+                <input type="number" name="max_people" placeholder="Max people" required>
+                <input type="date" name="date" placeholder="Date" required>
+                <input type="time" name="time" placeholder="Time" required>
+                <input type="number" name="price" placeholder="Price (CHF)" required>
+                <button class="admin-btn" type="submit">Add Course</button>
+                <button class="admin-btn danger" type="button" onclick="this.parentElement.parentElement.style.display='none'">Cancel</button>
             </form>
-            <div class="admin-gallery">
-                {% for image in images %}
-                <div class="admin-gallery-item">
-                    <img src="{{ url_for('static', filename=image) }}" alt="Galeriebild">
-                    <button class="admin-remove-btn" onclick="removeImage('{{ image }}')">−</button>
-                </div>
-                {% endfor %}
+        </div>
+        <div class="admin-list">
+            {% for c in courses %}
+            <div class="admin-item">
+                <b>{{c.name}}</b><br>
+                <small>{{c.date}} {{c.time}}</small><br>
+                Max: {{c.max_people}}<br>
+                Price: CHF {{c.price}}<br>
+                <p>{{c.description}}</p>
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="action" value="remove_course">
+                    <input type="hidden" name="idx" value="{{loop.index0}}">
+                    <button class="admin-mini-btn" title="Remove">-</button>
+                </form>
             </div>
-        </div>
-        <!-- Team -->
-        <div class="admin-box">
-            <h3>Team verwalten</h3>
-            <button class="admin-add-btn" onclick="openModal('teamModal')">＋ Mitglied hinzufügen</button>
-            <ul class="admin-list">
-                {% for member in team %}
-                <li>
-                    <img src="{{ url_for('static', filename=member.photo) }}" alt="{{ member.name }}" class="admin-avatar">
-                    <strong>{{ member.name }}</strong> – {{ member.role }}
-                    <button class="admin-remove-btn" onclick="removeMember({{ member.id }})">−</button>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <!-- Blogs -->
-        <div class="admin-box">
-            <h3>Blogs verwalten</h3>
-            <button class="admin-add-btn" onclick="openModal('blogModal')">＋ Blog hinzufügen</button>
-            <ul class="admin-list">
-                {% for blog in blogs %}
-                <li>
-                    <strong>{{ blog.title }}</strong>
-                    <button class="admin-remove-btn" onclick="removeBlog({{ blog.id }})">−</button>
-                </li>
-                {% endfor %}
-            </ul>
+            {% endfor %}
         </div>
     </div>
-</div>
 
-<!-- Modals -->
-<div id="courseModal" class="admin-modal">
-    <form method="post" action="{{ url_for('admin_add_course') }}" class="admin-modal-content">
-        <span class="admin-close" onclick="closeModal('courseModal')">&times;</span>
-        <h3>Kurs hinzufügen</h3>
-        <input name="name" required placeholder="Kursname">
-        <textarea name="description" required placeholder="Beschreibung"></textarea>
-        <input name="max_people" type="number" min="1" required placeholder="Max. Teilnehmer">
-        <input name="date" type="date" required>
-        <input name="time" type="time" required>
-        <input name="price" type="number" min="0" step="0.01" required placeholder="Preis (CHF)">
-        <button type="submit">Speichern</button>
+    <!-- Gallery -->
+    <div class="admin-section">
+        <h2>Gallery <form style="display:inline;" method="post"><button type="button" onclick="document.getElementById('add-gallery-form').style.display='block'" class="admin-btn add">+</button></form></h2>
+        <div id="add-gallery-form" class="admin-form" style="display:none;">
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="add_gallery">
+                <input type="file" name="photo" accept="image/*" required>
+                <button class="admin-btn" type="submit">Upload</button>
+                <button class="admin-btn danger" type="button" onclick="this.parentElement.parentElement.style.display='none'">Cancel</button>
+            </form>
+        </div>
+        <div class="gallery-grid">
+            {% for img in gallery %}
+            <div class="gallery-thumb">
+                <img src="{{ url_for('static', filename='gallery/' + img) }}">
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="action" value="remove_gallery">
+                    <input type="hidden" name="filename" value="{{img}}">
+                    <button class="admin-mini-btn" title="Remove">-</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Team -->
+    <div class="admin-section">
+        <h2>Team <form style="display:inline;" method="post"><button type="button" onclick="document.getElementById('add-team-form').style.display='block'" class="admin-btn add">+</button></form></h2>
+        <div id="add-team-form" class="admin-form" style="display:none;">
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="add_team">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="text" name="role" placeholder="Role" required>
+                <textarea name="bio" placeholder="Short bio"></textarea>
+                <input type="file" name="photo" accept="image/*">
+                <button class="admin-btn" type="submit">Add</button>
+                <button class="admin-btn danger" type="button" onclick="this.parentElement.parentElement.style.display='none'">Cancel</button>
+            </form>
+        </div>
+        <div class="admin-list">
+            {% for m in team %}
+            <div class="team-thumb">
+                {% if m.photo %}
+                <img src="{{ url_for('static', filename='team/' + m.photo) }}">
+                {% endif %}
+                <b>{{m.name}}</b><br>
+                <small>{{m.role}}</small>
+                <p>{{m.bio}}</p>
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="action" value="remove_team">
+                    <input type="hidden" name="idx" value="{{loop.index0}}">
+                    <button class="admin-mini-btn" title="Remove">-</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Blogs -->
+    <div class="admin-section">
+        <h2>Blogs <form style="display:inline;" method="post"><button type="button" onclick="document.getElementById('add-blog-form').style.display='block'" class="admin-btn add">+</button></form></h2>
+        <div id="add-blog-form" class="admin-form" style="display:none;">
+            <form method="post">
+                <input type="hidden" name="action" value="add_blog">
+                <input type="text" name="title" placeholder="Title" required>
+                <textarea name="short_text" placeholder="Short preview" required></textarea>
+                <textarea name="full_text" placeholder="Full text" required></textarea>
+                <button class="admin-btn" type="submit">Add Blog</button>
+                <button class="admin-btn danger" type="button" onclick="this.parentElement.parentElement.style.display='none'">Cancel</button>
+            </form>
+        </div>
+        <div class="admin-list">
+            {% for b in blogs %}
+            <div class="admin-item">
+                <b>{{b.title}}</b> <small>{{b.date}}</small>
+                <p>{{b.short_text}}</p>
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="action" value="remove_blog">
+                    <input type="hidden" name="idx" value="{{loop.index0}}">
+                    <button class="admin-mini-btn" title="Remove">-</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Achievements -->
+    <div class="admin-section">
+        <h2>Achievements <form style="display:inline;" method="post"><button type="button" onclick="document.getElementById('add-achievement-form').style.display='block'" class="admin-btn add">+</button></form></h2>
+        <div id="add-achievement-form" class="admin-form" style="display:none;">
+            <form method="post">
+                <input type="hidden" name="action" value="add_achievement">
+                <input type="text" name="achievement" placeholder="Achievement" required>
+                <button class="admin-btn" type="submit">Add</button>
+                <button class="admin-btn danger" type="button" onclick="this.parentElement.parentElement.style.display='none'">Cancel</button>
+            </form>
+        </div>
+        <div class="admin-list">
+            {% for a in achievements %}
+            <div class="admin-item">
+                {{a}}
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="action" value="remove_achievement">
+                    <input type="hidden" name="idx" value="{{loop.index0}}">
+                    <button class="admin-mini-btn" title="Remove">-</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <form method="post" action="{{ url_for('admin.logout') }}">
+        <button class="admin-btn danger" type="submit">Logout</button>
     </form>
-</div>
-<div id="teamModal" class="admin-modal">
-    <form method="post" action="{{ url_for('admin_add_member') }}" enctype="multipart/form-data" class="admin-modal-content">
-        <span class="admin-close" onclick="closeModal('teamModal')">&times;</span>
-        <h3>Mitglied hinzufügen</h3>
-        <input name="name" required placeholder="Name">
-        <input name="role" required placeholder="Rolle">
-        <input name="photo" type="file" required accept="image/*">
-        <button type="submit">Speichern</button>
-    </form>
-</div>
-<div id="blogModal" class="admin-modal">
-    <form method="post" action="{{ url_for('admin_add_blog') }}" class="admin-modal-content">
-        <span class="admin-close" onclick="closeModal('blogModal')">&times;</span>
-        <h3>Blog hinzufügen</h3>
-        <input name="title" required placeholder="Titel">
-        <textarea name="text" required placeholder="Text"></textarea>
-        <button type="submit">Speichern</button>
-    </form>
-</div>
-<script>
-function openModal(id) { document.getElementById(id).style.display = 'block'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function deleteCourse(id) { /* AJAX or form submit to delete course */ }
-function removeImage(filename) { /* AJAX or form submit to remove image */ }
-function removeMember(id) { /* AJAX or form submit to remove member */ }
-function removeBlog(id) { /* AJAX or form submit to remove blog */ }
-</script>
-{% endblock %}
+    <script>
+      // Close forms when clicking outside
+      document.addEventListener('click', function(e){
+        document.querySelectorAll('.admin-form').forEach(function(f){
+          if (f.style.display === 'block' && !f.contains(e.target) && !e.target.classList.contains('admin-btn')) {
+            f.style.display = 'none';
+          }
+        });
+      });
+    </script>
+</body>
+</html>
