@@ -1,1 +1,32 @@
-
+{% extends "base.html" %}
+{% block content %}
+<div class="section-box">
+    <h2>Aktuelle News</h2>
+    <div class="news-collage-grid">
+        <aside class="achievements-box">
+            <h3>Erfolge</h3>
+            <ul>
+                <li>Erfolg 1 (edit)</li>
+                <li>Erfolg 2 (edit)</li>
+                <li>Erfolg 3 (edit)</li>
+            </ul>
+        </aside>
+        {% for blog in blogs %}
+        <article class="blog-collage-item">
+            <h3>{{ blog.title }}</h3>
+            <details{% if not blog.is_long %} open{% endif %}>
+                <summary>
+                    {{ blog.short_text }}
+                    {% if blog.is_long %}
+                        <span class="expand-arrow" aria-label="Mehr anzeigen">➔</span>
+                    {% endif %}
+                </summary>
+                <div class="blog-full">
+                    {{ blog.full_text }}
+                </div>
+            </details>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
