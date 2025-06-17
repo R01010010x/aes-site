@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { background: #f4f6fa; margin:0; padding:2em; font-family: 'Segoe UI', sans-serif;}
+        .login-box { background: #fff; border-radius: 16px; box-shadow:0 2px 16px #0001; padding:2em; max-width: 400px; margin: 6em auto;}
+        .login-box input { width:100%; margin-bottom:1em; border-radius: 6px; border:1px solid #ccc; padding:0.5em;}
+        .admin-btn { border:none; background:#2d92f4; color:#fff; border-radius:6px; padding:0.5em 1.2em; font-size:1em; cursor:pointer; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>Admin Login</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, msg in messages %}
+              <div class="flash {{category}}">{{ msg }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <form method="post">
+            <input type="password" name="password" placeholder="Password" required>
+            <button class="admin-btn" type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>
