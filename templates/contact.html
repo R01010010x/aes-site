@@ -1,1 +1,31 @@
-
+{% extends "base.html" %}
+{% block content %}
+<div class="section-box">
+    <h2>Kontakt</h2>
+    <div class="grid-row">
+        <div class="grid-col" style="min-width:260px;">
+            <h3>Kontaktieren Sie uns!</h3>
+            <p>
+                <i class="bi bi-telephone"></i> 0000000000<br>
+                <i class="bi bi-envelope"></i> arcumetscientiam@gmail.com<br>
+                <i class="bi bi-geo-alt"></i> Adresse (edit)<br>
+                Schweiz<br>
+            </p>
+            <p>
+                <i class="bi bi-facebook"></i> (edit)<br>
+                <i class="bi bi-instagram"></i> arcum_et_scientiam (edit)
+            </p>
+        </div>
+        <div class="grid-col" style="min-width:320px;">
+            <h3>Schnellkontakt</h3>
+            <form method="post" action="{{ url_for('contact') }}">
+                <label for="email">E-Mail Adresse</label>
+                <input type="email" id="email" name="email" required placeholder="E-Mail Adresse">
+                <label for="message">Nachricht</label>
+                <textarea id="message" name="message" required placeholder="Nachricht"></textarea>
+                <button type="submit" class="button secondary">➔ Abschicken</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
