@@ -25,7 +25,7 @@ def home():
 def news():
     return render_template('news.html', active_page='news')
 
-@app.route('/archive')
+@app.route('/archiv')
 def archive():
     return render_template('archive.html', active_page='news')
 
@@ -33,12 +33,12 @@ def archive():
 def team():
     return render_template('team.html', active_page='about')
 
-@app.route('/gallery')
+@app.route('/galerie')
 def gallery():
     images = get_gallery_images()
     return render_template('gallery.html', images=images, active_page='about')
 
-@app.route('/courses')
+@app.route('/kurse')
 def courses():
     return render_template('courses.html', active_page='offers')
 
@@ -46,7 +46,7 @@ def courses():
 def events():
     return render_template('events.html', active_page='offers')
 
-@app.route('/contact', methods=['GET', 'POST'])
+@app.route('/kontakt', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
         email = request.form.get('email')
