@@ -5,10 +5,10 @@
     <div class="gallery-masonry">
         {% for image in images %}
         <div class="gallery-masonry-item">
-            <img src="{{ url_for('static', filename=image) }}" alt="Galeriebild (edit)">
+            <img src="{{ url_for('static', filename='gallery/' + image) }}" alt="Gallery Image">
         </div>
         {% else %}
-        <p>Zurzeit sind keine Bilder vorhanden. (edit)</p>
+        <p>No images available.</p>
         {% endfor %}
     </div>
 </div>
