@@ -171,7 +171,7 @@ main#main-content {
     color: #a40000;
 }
 
-/* Box for sections */
+/* Box style for sections */
 .section-box {
     background: var(--box-bg);
     border-radius: var(--box-radius);
@@ -180,7 +180,7 @@ main#main-content {
     box-shadow: 0 2px 8px #0001;
 }
 
-/* Home grid & cards */
+/* Home grid and cards */
 .grid-row {
     display: flex;
     flex-wrap: wrap;
