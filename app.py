@@ -69,7 +69,7 @@ def send_email(sender_email, message_content):
     SMTP_USER = ''      # email here
     SMTP_PASS = ''      # email password or app password here
     RECEIVER = 'arcumetscientiam@gmail.com'
-    # ------------------------------------------------------
+    # ---------------------------------------
     msg = EmailMessage()
     msg['Subject'] = 'Website Contact Form'
     msg['From'] = sender_email
