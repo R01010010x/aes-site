@@ -1,3 +1,6 @@
+from admin import admin_bp
+app.register_blueprint(admin_bp)
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 import smtplib
