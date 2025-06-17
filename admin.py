@@ -1,6 +1,3 @@
-from admin import admin_bp
-app.register_blueprint(admin_bp)
-
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, send_from_directory, current_app
 import json, os
 from werkzeug.utils import secure_filename
