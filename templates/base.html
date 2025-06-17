@@ -29,33 +29,33 @@
     <!-- Navbar -->
     <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="navbar-content">
-            <a href="{{ url_for('home') }}" class="navbar-logo" aria-label="Home">
+            <a href="{{ url_for('/') }}" class="navbar-logo" aria-label="Home">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Arcum et Scientiam logo (edit)">
             </a>
             <ul class="navbar-links">
                 <li>
-                    <a href="{{ url_for('news') }}" class="{% if active_page=='news' %}active{% endif %}">News</a>
+                    <a href="{{ url_for('aktuelles') }}" class="{% if active_page.startswith('news') %}active{% endif %}">News</a>
                     <ul class="dropdown">
-                        <li><a href="{{ url_for('news') }}">Aktuelles</a></li>
-                        <li><a href="{{ url_for('archive') }}">Archive</a></li>
+                        <li><a href="{{ url_for('news/aktuelles') }}">Aktuelles</a></li>
+                        <li><a href="{{ url_for('news/archiv') }}">Archiv</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="{{ url_for('team') }}" class="{% if active_page=='about' %}active{% endif %}">Über uns</a>
+                    <a href="{{ url_for('team') }}" class="{% if active_page.startswith('überuns') %}active{% endif %}">Über uns</a>
                     <ul class="dropdown">
-                        <li><a href="{{ url_for('team') }}">Team</a></li>
-                        <li><a href="{{ url_for('gallery') }}">Galerie</a></li>
+                        <li><a href="{{ url_for('überuns/team') }}">Team</a></li>
+                        <li><a href="{{ url_for('überuns/galerie') }}">Galerie</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="{{ url_for('courses') }}" class="{% if active_page=='offers' %}active{% endif %}">Angebote</a>
+                    <a href="{{ url_for('kurse') }}" class="{% if active_page.startswith('angebote') %}active{% endif %}">Angebote</a>
                     <ul class="dropdown">
-                        <li><a href="{{ url_for('events') }}">Events</a></li>
-                        <li><a href="{{ url_for('courses') }}">Kurse</a></li>
+                        <li><a href="{{ url_for('angebote/events') }}">Events</a></li>
+                        <li><a href="{{ url_for('angebote/kurse') }}">Kurse</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="{{ url_for('contact') }}" class="{% if active_page=='contact' %}active{% endif %}">Kontakt</a>
+                    <a href="{{ url_for('kontakt') }}" class="{% if active_page=='kontakt' %}active{% endif %}">Kontakt</a>
                 </li>
             </ul>
         </div>
@@ -92,19 +92,19 @@
             <div class="footer-links">
                 <div>
                     <strong>Links</strong><br>
-                    <a href="{{ url_for('home') }}">Home</a><br>
-                    <a href="{{ url_for('news') }}">Aktuelles</a><br>
-                    <a href="{{ url_for('archive') }}">Archive</a><br>
-                    <a href="{{ url_for('team') }}">Team</a><br>
-                    <a href="{{ url_for('gallery') }}">Galerie</a><br>
-                    <a href="{{ url_for('events') }}">Events</a><br>
-                    <a href="{{ url_for('courses') }}">Kurse</a><br>
+                    <a href="{{ url_for('/') }}">Home</a><br>
+                    <a href="{{ url_for('news/aktuelles') }}">Aktuelles</a><br>
+                    <a href="{{ url_for('news/archiv') }}">Archiv</a><br>
+                    <a href="{{ url_for('überuns/team') }}">Team</a><br>
+                    <a href="{{ url_for('überuns/galerie') }}">Galerie</a><br>
+                    <a href="{{ url_for('angebote/events') }}">Events</a><br>
+                    <a href="{{ url_for('angebote/kurse') }}">Kurse</a><br>
                 </div>
                 <div>
                     <strong>Mehr über...</strong><br>
                     <a href="/static/pdfs/statuten.pdf" target="_blank" rel="noopener">Statuten (PDF) (edit)</a><br>
                     <a href="/static/pdfs/clubs.pdf" target="_blank" rel="noopener">Vereine (PDF) (edit)</a><br>
-                    <a href="{{ url_for('contact') }}">Kontakt</a><br>
+                    <a href="{{ url_for('kontakt') }}">Kontakt</a><br>
                     <a href="/static/pdfs/sponsors.pdf" target="_blank" rel="noopener">Sponsoren & Gönner (PDF) (edit)</a><br>
                 </div>
                 <div>
