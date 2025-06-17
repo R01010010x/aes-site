@@ -1,1 +1,15 @@
-
+{% extends "base.html" %}
+{% block content %}
+<div class="section-box">
+    <h2>Galerie</h2>
+    <div class="gallery-masonry">
+        {% for image in images %}
+        <div class="gallery-masonry-item">
+            <img src="{{ url_for('static', filename=image) }}" alt="Galeriebild (edit)">
+        </div>
+        {% else %}
+        <p>Zurzeit sind keine Bilder vorhanden. (edit)</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
