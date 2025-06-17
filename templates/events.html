@@ -1,1 +1,26 @@
-
+{% extends "base.html" %}
+{% block content %}
+<div class="section-box">
+    <h2>Events</h2>
+    <p>Wir bieten verschiedene Events an. (edit)</p>
+    <div class="section-box">
+        <h3>Wir bieten Events an</h3>
+        <p>Hier noch ein kurzer Beschreibungstext... (edit)</p>
+        <a class="button" href="#">➔ Jetzt ein Event buchen</a>
+    </div>
+    <div class="grid-row" style="justify-content:center;">
+        <div class="grid-col icon-hover-card" style="max-width:120px;">
+            <i class="bi bi-cake" style="font-size:3rem;" aria-label="Geburtstag"></i>
+            <div class="icon-hover-info">Geburtstag Event Beschreibung (edit)</div>
+        </div>
+        <div class="grid-col icon-hover-card" style="max-width:120px;">
+            <i class="bi bi-building" style="font-size:3rem;" aria-label="Firma"></i>
+            <div class="icon-hover-info">Firmen Event Beschreibung (edit)</div>
+        </div>
+        <div class="grid-col icon-hover-card" style="max-width:120px;">
+            <i class="bi bi-question-circle" style="font-size:3rem;" aria-label="Unbekannt"></i>
+            <div class="icon-hover-info">Unbekannter Event Beschreibung (edit)</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
