@@ -4,9 +4,8 @@ import smtplib
 from email.message import EmailMessage
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key_here"  # Needed for flashing messages
+app.secret_key = "your_secret_key_here"  # For Flash messages
 
-# --- Helper: Auto-populate gallery images ---
 def get_gallery_images():
     gallery_path = os.path.join(app.static_folder, "images", "gallery")
     files = []
@@ -21,28 +20,28 @@ def get_gallery_images():
 def home():
     return render_template('home.html', active_page='home')
 
-@app.route('/news')
+@app.route('/news/aktuelles')
 def news():
     return render_template('news.html', active_page='news')
 
-@app.route('/archiv')
+@app.route('/news/archiv')
 def archive():
     return render_template('archive.html', active_page='news')
 
-@app.route('/team')
+@app.route('/ueber-uns/team')
 def team():
     return render_template('team.html', active_page='about')
 
-@app.route('/galerie')
+@app.route('/ueber-uns/galerie')
 def gallery():
     images = get_gallery_images()
     return render_template('gallery.html', images=images, active_page='about')
 
-@app.route('/kurse')
+@app.route('/angebote/kurse')
 def courses():
     return render_template('courses.html', active_page='offers')
 
-@app.route('/events')
+@app.route('/angebote/events')
 def events():
     return render_template('events.html', active_page='offers')
 
@@ -52,26 +51,25 @@ def contact():
         email = request.form.get('email')
         message = request.form.get('message')
         if not email or not message:
-            flash('All fields are required.', 'error')
+            flash('Bitte alle Felder ausfüllen.', 'error')
             return redirect(url_for('contact'))
         try:
             send_email(email, message)
-            flash('Your message has been sent!', 'success')
+            flash('Deine Nachricht wurde gesendet!', 'success')
         except Exception as e:
-            flash('There was an error sending your message. Please try again later.', 'error')
+            flash('Beim Senden ist ein Fehler aufgetreten. Bitte später erneut versuchen.', 'error')
         return redirect(url_for('contact'))
     return render_template('contact.html', active_page='contact')
 
 def send_email(sender_email, message_content):
-    # ---- FILL IN WITH SMTP CREDENTIALS ----
+    # SMTP configuration
     SMTP_SERVER = 'smtp.gmail.com'
     SMTP_PORT = 587
-    SMTP_USER = ''      # email here
-    SMTP_PASS = ''      # email password or app password here
+    SMTP_USER = ''      # Mail
+    SMTP_PASS = ''      # password / App password
     RECEIVER = 'arcumetscientiam@gmail.com'
-    # ---------------------------------------
     msg = EmailMessage()
-    msg['Subject'] = 'Website Contact Form'
+    msg['Subject'] = 'Kontaktformular Website'
     msg['From'] = sender_email
     msg['To'] = RECEIVER
     msg.set_content(message_content)
