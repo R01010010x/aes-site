@@ -1,1 +1,37 @@
-
+{% extends "base.html" %}
+{% block content %}
+<div class="section-box">
+    <div class="grid-row">
+        <div class="grid-col">
+            <h2>Willkommen bei Arcum et Scientiam</h2>
+            <p>Some intro text... placeholder (edit)</p>
+            <a class="button" href="{{ url_for('team') }}">↞ Über Uns ↠</a>
+        </div>
+        <div class="grid-col photo">
+            Photo 1 (edit)
+        </div>
+    </div>
+    <div class="grid-row" style="justify-content:center;">
+        <div class="grid-col photo" style="max-width:120px;"><i class="bi bi-calendar" aria-label="Calendar"></i></div>
+        <div class="grid-col photo" style="max-width:120px;"><i class="bi bi-people" aria-label="People"></i></div>
+        <div class="grid-col photo" style="max-width:120px;"><i class="bi bi-newspaper" aria-label="News"></i></div>
+        <div class="grid-col photo" style="max-width:120px;"><i class="bi bi-book" aria-label="Book"></i></div>
+    </div>
+    <div class="grid-row">
+        <div class="grid-col">
+            Event Offer 1<br>Birthday (edit)
+        </div>
+        <div class="grid-col">
+            Event Offer 2<br>Company events (edit)
+        </div>
+        <div class="grid-col">
+            Event Offer 3 (edit)
+        </div>
+    </div>
+</div>
+<div class="section-box">
+    <h2>Über Uns</h2>
+    <p>More placeholder text. Short summary about us. (edit)</p>
+    <a class="button secondary" href="{{ url_for('team') }}">Mehr ↠</a>
+</div>
+{% endblock %}
