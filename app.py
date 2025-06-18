@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+app = Flask(__name__)
+
 import os
 import smtplib
 from email.message import EmailMessage
 from admin import admin_bp
 
-app = Flask(__name__)
 app.secret_key = "your_secret_key_here"  # For Flash messages
 app.register_blueprint(admin_bp)
 
