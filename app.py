@@ -9,15 +9,12 @@ from email.message import EmailMessage
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"  # For Flash messages
 
-def get_gallery_images():
-    gallery_path = os.path.join(app.static_folder, "images", "gallery")
-    files = []
-    if os.path.exists(gallery_path):
-        for fname in os.listdir(gallery_path):
-            if fname.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".svg")):
-                files.append("images/gallery/" + fname)
-    files.sort()
-    return files
+BLOG_LIMIT = 10
+ACHIEVEMENT_LIMIT = 10
+
+def load_json(filename):
+    with open(os.path.join('data', filename), encoding="utf-8") as f:
+        return json.load(f)
 
 @app.route('/')
 def home():
@@ -25,24 +22,36 @@ def home():
 
 @app.route('/news/aktuelles')
 def news():
-    return render_template('news.html', active_page='news')
+    blogs = load_json('blogs.json')
+    achievements = load_json('achievements.json')
+    return render_template('news.html',
+        blogs=blogs[:BLOG_LIMIT],
+        achievements=achievements[:ACHIEVEMENT_LIMIT]
+    )
 
 @app.route('/news/archiv')
 def archive():
-    return render_template('archive.html', active_page='news')
+    blogs = load_json('blogs.json')
+    achievements = load_json('achievements.json')
+    return render_template('archive.html',
+        blogs=blogs[BLOG_LIMIT:],
+        achievements=achievements[ACHIEVEMENT_LIMIT:]
+    )
 
 @app.route('/ueber-uns/team')
 def team():
-    return render_template('team.html', active_page='about')
+    team = load_json('team.json')
+    return render_template('team.html', team=team)
 
 @app.route('/ueber-uns/galerie')
 def gallery():
-    images = get_gallery_images()
-    return render_template('gallery.html', images=images, active_page='about')
+    images = load_json('gallery.json')
+    return render_template('gallery.html', images=images)
 
 @app.route('/angebote/kurse')
 def courses():
-    return render_template('courses.html', active_page='offers')
+    courses = load_json('courses.json')
+    return render_template('courses.html', courses=courses)
 
 @app.route('/angebote/events')
 def events():
