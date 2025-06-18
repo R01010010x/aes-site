@@ -1,13 +1,12 @@
-from admin import admin_bp
-app.register_blueprint(admin_bp)
-
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 import smtplib
 from email.message import EmailMessage
+from admin import admin_bp
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"  # For Flash messages
+app.register_blueprint(admin_bp)
 
 BLOG_LIMIT = 10
 ACHIEVEMENT_LIMIT = 10
