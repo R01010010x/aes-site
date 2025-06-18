@@ -2,11 +2,13 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 import json, os
 from werkzeug.utils import secure_filename
 from datetime import datetime
+import uuid
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 DATA_DIR = 'data'
 GALLERY_DIR = 'static/gallery'
+TEAM_DIR = 'static/team'
 ADMIN_PASSWORD = 'adminaccess01x'
 
 def load_json(filename):
@@ -78,6 +80,11 @@ def dashboard():
             if file and allowed_file(file.filename):
                 fname = secure_filename(file.filename)
                 path = os.path.join(GALLERY_DIR, fname)
+                # Ensure unique filename
+                if os.path.exists(path):
+                    name, ext = os.path.splitext(fname)
+                    fname = f"{name}_{uuid.uuid4().hex[:8]}{ext}"
+                    path = os.path.join(GALLERY_DIR, fname)
                 file.save(path)
                 gallery.append(fname)
                 save_json('gallery.json', gallery)
@@ -105,11 +112,15 @@ def dashboard():
             file = request.files.get('photo')
             if file and allowed_file(file.filename):
                 fname = secure_filename(file.filename)
-                path = os.path.join('static/team', fname)
+                path = os.path.join(TEAM_DIR, fname)
+                # Ensure unique filename
+                if os.path.exists(path):
+                    name, ext = os.path.splitext(fname)
+                    fname = f"{name}_{uuid.uuid4().hex[:8]}{ext}"
+                    path = os.path.join(TEAM_DIR, fname)
                 file.save(path)
-                member['photo'] = fname
-            team.append(member)
-            save_json('team.json', team)
+                team.append(fname)
+                save_json('team.json', team)
             flash("Team member added", "success")
         elif action == 'remove_team':
             idx = int(request.form['idx'])
